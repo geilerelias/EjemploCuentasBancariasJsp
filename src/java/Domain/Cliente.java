@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author geile
  */
-public class Cliente {
+public class Cliente implements IEntity{
     private int codigo;
     private String nombre;
     private ArrayList<CuentaBancaria> lista;

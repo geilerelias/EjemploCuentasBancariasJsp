@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author geile
  */
-public abstract class CuentaBancaria {
+public abstract class CuentaBancaria implements IEntity {
 
     private int codigoCliente;
     private double saldo;
@@ -32,6 +32,8 @@ public abstract class CuentaBancaria {
     public abstract String Retirar(double valor, String ciudad, Date fecha);
 
     public abstract String Consultar();
+
+    public abstract int getCodigo() ;
 
     /**
      * @return the saldo

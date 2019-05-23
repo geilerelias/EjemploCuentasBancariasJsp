@@ -18,7 +18,6 @@ public class CuentaAhorro extends CuentaBancaria {
     private int numeroTarjeta;
     private double saldoMaximo;
     private Date fechaVencimiento;
-    public static RepositoryCuenta repositoryCuenta = RepositoryCuenta.getRepositoryCuenta();
 
     public CuentaAhorro() {
     }
@@ -32,7 +31,7 @@ public class CuentaAhorro extends CuentaBancaria {
 
     @Override
     public String Consignar(double valor, String ciudad, Date fecha) {
-        
+
         return "mundo";
     }
 
@@ -46,15 +45,11 @@ public class CuentaAhorro extends CuentaBancaria {
         if (this.getSaldo() <= 0) {
             return "El saldo incial debe ser mayor a cero";
         }
-        if (repositoryCuenta.add(this)) {
-            return "Registro Exitoso";
-        }
+//        if (.add(this)) {
+//            return "Registro Exitoso";
+//        }
         return "No registrado";
     }
-  
-    @Override
-    public CuentaAhorro Consultar(int numero) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templat
 
     /**
      * @return the numeroTarjeta
@@ -96,6 +91,16 @@ public class CuentaAhorro extends CuentaBancaria {
      */
     public void setFechaVencimiento(Date fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    @Override
+    public String Consultar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getCodigo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

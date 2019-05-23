@@ -5,6 +5,8 @@
  */
 package Repository;
 
+
+
 import Domain.CuentaBancaria;
 import java.util.ArrayList;
 
@@ -14,46 +16,35 @@ import java.util.ArrayList;
  */
 public class RepositoryCuenta {
 
-    private ArrayList<CuentaBancaria> arrayList;
-    private static RepositoryCuenta repositoryCuenta;
+    ArrayList<CuentaBancaria> list;
 
-    public static RepositoryCuenta getRepositoryCuenta() {
-        if (repositoryCuenta == null) {
-            repositoryCuenta = new RepositoryCuenta();
+    public RepositoryCuenta() {
+        list = new ArrayList<>();
+    }
+
+    public ArrayList<CuentaBancaria> GetAll() {
+        return list;
+    }
+
+    public CuentaBancaria Find(int identificacion) {
+        for (CuentaBancaria cuenta : list) {
+            if (identificacion == cuenta.getCodigo()) {
+                return cuenta;
+            }
         }
-        return repositoryCuenta;
+        return null;
     }
 
-    private RepositoryCuenta() {
-        arrayList = new ArrayList<>();
+    public boolean Add(CuentaBancaria cuenta) {
+        return list.add(cuenta);
     }
 
-    public boolean add(CuentaBancaria cuenta) {
-        getArrayList().add(cuenta);
-        return true;
+    public boolean Delete(CuentaBancaria cuenta) {
+        return list.remove(cuenta);
     }
 
-    public boolean actualizar(ArrayList<CuentaBancaria> arrayList) {
-        this.setArrayList(arrayList);
-        return true;
-    }
-
-    public ArrayList<CuentaBancaria> getAll() {
-        return getArrayList();
-    }
-
-    /**
-     * @return the arrayList
-     */
-    public ArrayList<CuentaBancaria> getArrayList() {
-        return arrayList;
-    }
-
-    /**
-     * @param arrayList the arrayList to set
-     */
-    public void setArrayList(ArrayList<CuentaBancaria> arrayList) {
-        this.arrayList = arrayList;
+    public CuentaBancaria Edit(int index, CuentaBancaria cuenta) {
+        return list.set(index, cuenta);
     }
 
 }
