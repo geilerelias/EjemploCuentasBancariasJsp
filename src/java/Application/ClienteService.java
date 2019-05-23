@@ -64,9 +64,10 @@ public class ClienteService extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<h1>Nombre:" + nombre + "</h1><br> <h1>Precio:" + precio + "</h1><br> <h1>Cantidad:" + cantidad + "</h1>");
+            out.println("<h1>Nombre:" + nombre + "</h1><br> <h1>Precio:" + precio + "</h1>");
         }
-        repositoryCliente
+       //repositoryCliente
+                
     }
 
 }
