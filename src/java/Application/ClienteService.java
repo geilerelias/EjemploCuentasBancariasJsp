@@ -5,6 +5,7 @@
  */
 package Application;
 
+import Repository.RepositoryCliente;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "ClienteService", urlPatterns = {"/ClienteService"})
 public class ClienteService extends HttpServlet {
 
+    RepositoryCliente repositoryCliente = new RepositoryCliente();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -29,8 +32,6 @@ public class ClienteService extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -43,7 +44,7 @@ public class ClienteService extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**
@@ -57,7 +58,15 @@ public class ClienteService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String precio = request.getParameter("Identificacion");
+        String nombre = request.getParameter("Nombre");
         
+
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<h1>Nombre:" + nombre + "</h1><br> <h1>Precio:" + precio + "</h1><br> <h1>Cantidad:" + cantidad + "</h1>");
+        }
+        repositoryCliente
     }
 
 }
