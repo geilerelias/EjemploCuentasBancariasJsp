@@ -123,12 +123,12 @@
                                 <div class="form-group ">
                                     <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
                                     <label for="txtIdentificacion " class="bmd-label-floating ">Identificación</label>
-                                    <input type="text " class="form-control " id="txtIdentificacion">
+                                    <input type="number" class="form-control " id="txtIdentificacion">
                                 </div>
                                 <div class="form-group ">
                                     <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
                                     <label for="txtNombre " class="bmd-label-floating ">Nombres y apellidos</label>
-                                    <input type="text " class="form-control " id="txtNombre">
+                                    <input type="text" class="form-control " id="txtNombre">
                                 </div>
                                 <div class="text-center ">
                                     <button type="button" id="btnGuardar" class="btn btn-primary btn-raised ">Guardar</button>
@@ -187,29 +187,42 @@
         <script src="https://code.jquery.com/jquery-3.2.1.min.js " ></script>
         <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js " integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U " crossorigin="anonymous "></script>
         <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js " integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9 " crossorigin="anonymous "></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
         <script>
                             $(document).ready(function () {
-                                
+cargarTabla();
                                 $('body').bootstrapMaterialDesign();
                                 $("#btnGuardar").click(function (e) {
-                                    alert("estoy llegando ");
+
                                     var Identificacion = $("#txtIdentificacion").val();
                                     var Nombre = $("#txtNombre").val();
-                                    var data= {
-                                            "Identificacion": Identificacion,
-                                            "Nombre": Nombre
-                                        };
-                                    console.log(data);
+
                                     $.ajax({
                                         type: "POST",
-                                        url: "NewServlet",
+                                        url: "ClienteService",
                                         data: {
+                                            "Accion": "Registrar",
                                             "Identificacion": Identificacion,
                                             "Nombre": Nombre
                                         }
                                     })
                                             .done(function (response) {
-                                                $("#table-body").html(response);
+                                                var json = JSON.parse(response);
+                                                console.log(json);
+                                                if (json.estado == true) {
+                                                    Swal.fire({
+                                                        type: 'success',
+                                                        title: 'God job...',
+                                                        text: json.mensaje
+                                                    });
+                                                } else {
+                                                    Swal.fire({
+                                                        type: 'error',
+                                                        title: 'Oops...',
+                                                        text: json.mensaje
+                                                    });
+                                                }
+                                                cargarTabla();
                                                 console.log("success ");
                                             })
                                             .fail(function () {
@@ -220,6 +233,29 @@
                                             });
                                 });
                             });
+
+                            /**
+                             * Comment
+                             */
+                            function cargarTabla() {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "ClienteService",
+                                    data: {
+                                        "Accion": "ObtenerTodos"
+                                    }
+                                })
+                                        .done(function (response) {
+                                            $("#table-body").html(response);
+                                            console.log("success ");
+                                        })
+                                        .fail(function () {
+                                            console.log("error ");
+                                        })
+                                        .always(function () {
+                                            console.log("complete ");
+                                        });
+                            }
         </script>
     </body>
 

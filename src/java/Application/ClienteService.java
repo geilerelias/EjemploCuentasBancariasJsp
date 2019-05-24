@@ -7,6 +7,7 @@ package Application;
 
 import Domain.Cliente;
 import Repository.RepositoryCliente;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -59,30 +60,132 @@ public class ClienteService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int codigo = Integer.parseInt(request.getParameter("Identificacion"));
-        String nombre = request.getParameter("Nombre");
-        Cliente cliente = new Cliente(codigo, nombre);
-        repositoryCliente.Add(cliente);
+        String accion = request.getParameter("Accion");
+        if (null != accion) {
+            switch (accion) {
+                case "Registrar":
+                    Registrar(response, request);
+                    break;
+                case "Consultar":
+                    Consultar(response, request);
+                    break;
+                case "ObtenerTodos":
+                    ObtenerTodos(response);
+                    break;
+                case "Editar":
+                    break;
+                case "Eliminar":
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //repositoryCliente
+    }
+
+    private void Consultar(HttpServletResponse response, HttpServletRequest request) throws NumberFormatException, IOException {
+        try (PrintWriter out = response.getWriter()) {
+            int codigo = Integer.parseInt(request.getParameter("Identificacion"));
+            Gson gson = new Gson();
+            Cliente cliente = repositoryCliente.Find(codigo);
+            ClienteResponse respuesta = new ClienteResponse();
+            if (cliente != null) {
+                respuesta.setMensaje("Consulta correcto");
+                respuesta.setEstado(true);
+
+            } else {
+                respuesta.setMensaje("Cliente no registrado");
+                respuesta.setEstado(false);
+            }
+            out.println("[" + gson.toJson(cliente) + "," + gson.toJson(respuesta) + "]");
+        }
+    }
+
+    private void ObtenerTodos(HttpServletResponse response) throws IOException {
         String tableBody = "";
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-//            for (int i = 0; i < repositoryCliente.GetAll().size()-1; i++) {
-//                tableBody += "<tr>"
-//                        + "<th scope='row'>" + i + "</th>"
-//                        + "<td>" + codigo + "</td>"
-//                        + "<td>" + nombre + "</td>"
-//                        + "</tr>";
-//
-//            }
-            tableBody += "<tr>"
-                        + "<th scope='row'>" + 1 + "</th>"
-                        + "<td>" + codigo + "</td>"
-                        + "<td>" + nombre + "</td>"
+            int i = 0;
+            for (Cliente c : repositoryCliente.GetAll()) {
+                tableBody += "<tr>"
+                        + "<th scope='row'>" + ++i + "</th>"
+                        + "<td>" + c.getCodigo() + "</td>"
+                        + "<td>" + c.getNombre() + "</td>"
                         + "</tr>";
+            }
             out.println(tableBody);
         }
-        //repositoryCliente
+    }
 
+    private void Registrar(HttpServletResponse response, HttpServletRequest request) throws NumberFormatException, IOException {
+        try (PrintWriter out = response.getWriter()) {
+            int codigo = Integer.parseInt(request.getParameter("Identificacion"));
+            String nombre = request.getParameter("Nombre");
+
+            Gson gson = new Gson();
+            ClienteResponse respuesta = new ClienteResponse();
+            Cliente cliente = repositoryCliente.Find(codigo);
+            if (cliente == null) {
+                cliente = new Cliente(codigo, nombre);
+                if (repositoryCliente.Add(cliente)) {
+                    respuesta.setMensaje("Registro correcto");
+                    respuesta.setEstado(true);
+                } else {
+                    respuesta.setMensaje("Error en el registro");
+                    respuesta.setEstado(false);
+                }
+
+            } else {
+                respuesta.setMensaje("El cliente ya se encuentra registrado");
+                respuesta.setEstado(false);
+            }
+
+            out.println(gson.toJson(respuesta));
+        }
+    }
+
+}
+
+class ClienteResponse {
+
+    private String mensaje;
+    private boolean estado;
+
+    public ClienteResponse() {
+    }
+
+    public ClienteResponse(String mensaje, boolean estado) {
+        this.mensaje = mensaje;
+        this.estado = estado;
+    }
+
+    /**
+     * @return the mensaje
+     */
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    /**
+     * @param mensaje the mensaje to set
+     */
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    /**
+     * @return the estado
+     */
+    public boolean getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param b the estado to set
+     */
+    public void setEstado(boolean b) {
+        this.estado = b;
     }
 
 }
