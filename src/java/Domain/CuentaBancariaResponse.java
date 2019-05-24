@@ -11,12 +11,61 @@ package Domain;
  */
 class CuentaBancariaResponse {
 
-    CuentaBancariaResponse(String el_saldo_incial_debe_ser_mayor_a_cero, boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private String mensaje;
+    private boolean estado;
+    private CuentaBancaria cuenta;
+
+    public CuentaBancariaResponse() {
     }
 
-    CuentaBancariaResponse() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CuentaBancariaResponse(String mensaje, boolean estado) {
+        this.mensaje = mensaje;
+        this.estado = estado;
     }
+
+    /**
+     * @return the mensaje
+     */
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    /**
+     * @param mensaje the mensaje to set
+     */
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    /**
+     * @return the estado
+     */
+    public boolean isEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+
+    /**
+     * @return the cuenta
+     */
+    public CuentaBancaria getCuenta() {
+        return cuenta;
+    }
+
+    /**
+     * @param cuenta the cuenta to set
+     */
+    public void setCuenta(CuentaBancaria cuenta) {
+        this.cuenta = cuenta;
+    }
+
     
+
+
 }

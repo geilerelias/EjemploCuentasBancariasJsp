@@ -30,7 +30,6 @@ public abstract class CuentaBancaria implements IEntity {
         this.cantidadRetiros = cantidadRetiros;
         this.repositoryCuenta = repositoryCuenta;
     }
-    
 
     public CuentaBancaria(double saldo, double cantidadRetiros) {
         this.saldo = saldo;
@@ -44,6 +43,8 @@ public abstract class CuentaBancaria implements IEntity {
     public abstract CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha);
 
     public abstract CuentaBancariaResponse Consultar();
+
+    public abstract int getIndex();
 
     public abstract int getCodigo();
 
@@ -68,6 +69,10 @@ public abstract class CuentaBancaria implements IEntity {
         return cantidadRetiros;
     }
 
+    public void setCantidadRetiros(double cantidadRetiros) {
+        this.cantidadRetiros = cantidadRetiros;
+    }
+    
     /**
      * @return the codigoCliente
      */
@@ -95,6 +100,5 @@ public abstract class CuentaBancaria implements IEntity {
     public void setRepositoryCuenta(RepositoryCuenta repositoryCuenta) {
         this.repositoryCuenta = repositoryCuenta;
     }
-
 
 }

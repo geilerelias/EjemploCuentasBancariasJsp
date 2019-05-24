@@ -14,8 +14,8 @@ import java.util.Date;
  */
 public class CuentaCorriente extends CuentaBancaria {
 
-    int numeroChequera;
-    double valorMinimo;
+    private int numeroChequera;
+    private double valorMinimo;
 
     public CuentaCorriente(RepositoryCuenta repositoryCuenta) {
         super(repositoryCuenta);
@@ -29,26 +29,88 @@ public class CuentaCorriente extends CuentaBancaria {
 
     @Override
     public CuentaBancariaResponse Crear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.getSaldo() <= 0) {
+            return new CuentaBancariaResponse("El saldo incial debe ser mayor a cero", false);
+        }
+        if (getRepositoryCuenta().Add(this)) {
+            return new CuentaBancariaResponse("Registro realizado con exito", true);
+        }
+        return new CuentaBancariaResponse("No registrado", false);
     }
 
     @Override
     public CuentaBancariaResponse Consignar(double valor, String ciudad, Date fecha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setSaldo(getSaldo() + valor);
+        CuentaBancaria cuenta = getRepositoryCuenta().Find(this.getNumeroChequera());
+        getRepositoryCuenta().Edit(getIndex(), cuenta);
+        return new CuentaBancariaResponse("Consignacion correcta", false);
     }
 
     @Override
     public CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (getSaldo() == valorMinimo) {
+            return new CuentaBancariaResponse("No hay Fondos sufiecientes", false);
+        }
+
+        if (getSaldo() - valor * 1.10 < valorMinimo) {
+            return new CuentaBancariaResponse("No hay Fondos sufiecientes", false);
+        }
+
+        if (getCantidadRetiros() > 4) {
+            setSaldo(getSaldo() - valor * 1.10);
+            getRepositoryCuenta().Edit(getIndex(), this);
+            return new CuentaBancariaResponse("Retiro realizado con exito, con un ocsto de $" + (valor * 0.10), true);
+        } else {
+            setSaldo(getSaldo() - valor * 0.10);
+            getRepositoryCuenta().Edit(getIndex(), this);
+            double cont = getCantidadRetiros();
+            setCantidadRetiros(cont++);
+            return new CuentaBancariaResponse("Retiro realizado con exito, operacion sin consto", true);
+        }
     }
 
     @Override
     public CuentaBancariaResponse Consultar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CuentaBancariaResponse response = new CuentaBancariaResponse();
+        response.setCuenta(getRepositoryCuenta().Find(getNumeroChequera()));
+        return response;
     }
 
     @Override
     public int getCodigo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getNumeroChequera();
+    }
+
+    @Override
+    public int getIndex() {
+        return getRepositoryCuenta().getIndex(getNumeroChequera());
+    }
+
+    /**
+     * @return the numeroChequera
+     */
+    public int getNumeroChequera() {
+        return numeroChequera;
+    }
+
+    /**
+     * @param numeroChequera the numeroChequera to set
+     */
+    public void setNumeroChequera(int numeroChequera) {
+        this.numeroChequera = numeroChequera;
+    }
+
+    /**
+     * @return the valorMinimo
+     */
+    public double getValorMinimo() {
+        return valorMinimo;
+    }
+
+    /**
+     * @param valorMinimo the valorMinimo to set
+     */
+    public void setValorMinimo(double valorMinimo) {
+        this.valorMinimo = valorMinimo;
     }
 }

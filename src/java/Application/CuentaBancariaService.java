@@ -6,7 +6,6 @@
 package Application;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -57,7 +56,29 @@ public class CuentaBancariaService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        String accion = request.getParameter("Accion");
+        if (null != accion) {
+            switch (accion) {
+                case "RegistrarCuentaAhorro":
+                    RegistrarCuentaAhorro(response, request);
+                    break;
+                     case "RegistrarCuentaCorriente":
+                    RegistrarCuentaCorriente(response, request);
+                    break;
+                case "Consultar":
+                    Consultar(response, request);
+                    break;
+                case "ObtenerTodos":
+                    ObtenerTodos(response);
+                    break;
+                case "Editar":
+                    break;
+                case "Eliminar":
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     /**
@@ -69,5 +90,21 @@ public class CuentaBancariaService extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void RegistrarCuentaAhorro(HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void RegistrarCuentaCorriente(HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void Consultar(HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void ObtenerTodos(HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

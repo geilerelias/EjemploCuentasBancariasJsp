@@ -15,7 +15,7 @@ import java.util.Date;
 public class CuentaAhorro extends CuentaBancaria {
 
     private int numeroTarjeta;
-    private double saldoMaximo;
+    private double saldoMaximo = 20000;
     private Date fechaVencimiento;
 
     public CuentaAhorro(RepositoryCuenta repositoryCuenta) {
@@ -30,34 +30,75 @@ public class CuentaAhorro extends CuentaBancaria {
 
     @Override
     public CuentaBancariaResponse Consignar(double valor, String ciudad, Date fecha) {
-
-        return new CuentaBancariaResponse();
+        if (this.getFechaVencimiento().before(new Date())) {
+            return new CuentaBancariaResponse("la cuenta de ahorro caduco", false);
+        }
+        if (getSaldo() + valor <= saldoMaximo) {
+            setSaldo(getSaldo() + valor);
+            CuentaBancaria cuenta = getRepositoryCuenta().Find(this.getNumeroTarjeta());
+            getRepositoryCuenta().Edit(getIndex(), cuenta);
+            return new CuentaBancariaResponse("Consignacion correcta", false);
+        }
+        return new CuentaBancariaResponse("el valor a consignar supera el monto maximo", false);
     }
 
     @Override
     public CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha) {
-        return new CuentaBancariaResponse();
+        if (this.getFechaVencimiento().before(new Date())) {
+            return new CuentaBancariaResponse("la cuenta de ahorro caduco", false);
+        }
+        if (getSaldo() == 0) {
+            return new CuentaBancariaResponse("No hay Fondos sufiecientes", false);
+        }
+
+        if (getSaldo() - valor < 0) {
+            return new CuentaBancariaResponse("No hay Fondos sufiecientes", false);
+        }
+
+        if (getCantidadRetiros() > 3) {
+            setSaldo(getSaldo() - valor * 1.05);
+            getRepositoryCuenta().Edit(getIndex(), this);
+            return new CuentaBancariaResponse("Retiro realizado con exito, con un ocsto de $" + (valor * .05), true);
+        } else {
+            setSaldo(getSaldo() - valor * 1.05);
+            getRepositoryCuenta().Edit(getIndex(), this);
+            double cont = getCantidadRetiros();
+            setCantidadRetiros(cont++);
+            return new CuentaBancariaResponse("Retiro realizado con exito, operacion sin consto", true);
+        }
     }
 
     @Override
     public CuentaBancariaResponse Crear() {
         if (this.getSaldo() <= 0) {
-            return  new CuentaBancariaResponse("El saldo incial debe ser mayor a cero",false);
+            return new CuentaBancariaResponse("El saldo incial debe ser mayor a cero", false);
         }
-//        if (.add(this)) {
-//            return "Registro Exitoso";
-//        }
-        return new CuentaBancariaResponse("No registrado",false);
+
+        if (this.getFechaVencimiento().before(new Date())) {
+            return new CuentaBancariaResponse("la fecha de vencimiento no es valida", false);
+        }
+
+        if (getRepositoryCuenta().Add(this)) {
+            return new CuentaBancariaResponse("Registro realizado con exito", true);
+        }
+        return new CuentaBancariaResponse("No registrado", false);
     }
 
     @Override
     public CuentaBancariaResponse Consultar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CuentaBancariaResponse response = new CuentaBancariaResponse();
+        response.setCuenta(getRepositoryCuenta().Find(this.numeroTarjeta));
+        return response;
     }
 
     @Override
     public int getCodigo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.getNumeroTarjeta();
+    }
+
+    @Override
+    public int getIndex() {
+        return getRepositoryCuenta().getIndex(this.numeroTarjeta);
     }
 
     /**
@@ -73,6 +114,7 @@ public class CuentaAhorro extends CuentaBancaria {
     public void setNumeroTarjeta(int numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
     }
+
     /**
      * @return the fechaVencimiento
      */
@@ -86,5 +128,4 @@ public class CuentaAhorro extends CuentaBancaria {
     public void setFechaVencimiento(Date fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
-
 }

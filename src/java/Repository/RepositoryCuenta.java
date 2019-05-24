@@ -5,8 +5,6 @@
  */
 package Repository;
 
-
-
 import Domain.CuentaBancaria;
 import Domain.CuentaBancaria;
 import java.util.ArrayList;
@@ -46,6 +44,10 @@ public class RepositoryCuenta {
 
     public CuentaBancaria Edit(int index, CuentaBancaria cuenta) {
         return list.set(index, cuenta);
+    }
+
+    public int getIndex(int id) {
+        return list.indexOf(Find(id));
     }
 
 }
