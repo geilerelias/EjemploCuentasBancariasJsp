@@ -6,7 +6,6 @@
 package Domain;
 
 import Repository.RepositoryCuenta;
-import Repository.RepositoryCliente;
 import java.util.Date;
 
 /**
@@ -19,36 +18,46 @@ public class CuentaAhorro extends CuentaBancaria {
     private double saldoMaximo;
     private Date fechaVencimiento;
 
-    public CuentaAhorro() {
+    public CuentaAhorro(RepositoryCuenta repositoryCuenta) {
+        super(repositoryCuenta);
     }
 
-    public CuentaAhorro(int numeroTarjeta, double saldoMaximo, Date fechaVencimiento, double saldo, double cantidadRetiros) {
-        super(saldo, cantidadRetiros);
+    public CuentaAhorro(int numeroTarjeta, Date fechaVencimiento, int codigoCliente, double saldo, double cantidadRetiros, RepositoryCuenta repositoryCuenta) {
+        super(codigoCliente, saldo, cantidadRetiros, repositoryCuenta);
         this.numeroTarjeta = numeroTarjeta;
-        this.saldoMaximo = saldoMaximo;
         this.fechaVencimiento = fechaVencimiento;
     }
 
     @Override
-    public String Consignar(double valor, String ciudad, Date fecha) {
+    public CuentaBancariaResponse Consignar(double valor, String ciudad, Date fecha) {
 
-        return "mundo";
+        return new CuentaBancariaResponse();
     }
 
     @Override
-    public String Retirar(double valor, String ciudad, Date fecha) {
-        return "";
+    public CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha) {
+        return new CuentaBancariaResponse();
     }
 
     @Override
-    public String Crear() {
+    public CuentaBancariaResponse Crear() {
         if (this.getSaldo() <= 0) {
-            return "El saldo incial debe ser mayor a cero";
+            return  new CuentaBancariaResponse("El saldo incial debe ser mayor a cero",false);
         }
 //        if (.add(this)) {
 //            return "Registro Exitoso";
 //        }
-        return "No registrado";
+        return new CuentaBancariaResponse("No registrado",false);
+    }
+
+    @Override
+    public CuentaBancariaResponse Consultar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getCodigo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -64,21 +73,6 @@ public class CuentaAhorro extends CuentaBancaria {
     public void setNumeroTarjeta(int numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
     }
-
-    /**
-     * @return the saldoMaximo
-     */
-    public double getSaldoMaximo() {
-        return saldoMaximo;
-    }
-
-    /**
-     * @param saldoMaximo the saldoMaximo to set
-     */
-    public void setSaldoMaximo(double saldoMaximo) {
-        this.saldoMaximo = saldoMaximo;
-    }
-
     /**
      * @return the fechaVencimiento
      */
@@ -91,16 +85,6 @@ public class CuentaAhorro extends CuentaBancaria {
      */
     public void setFechaVencimiento(Date fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
-    }
-
-    @Override
-    public String Consultar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getCodigo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -5,6 +5,8 @@
  */
 package Domain;
 
+import Repository.RepositoryCuenta;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -16,24 +18,34 @@ public abstract class CuentaBancaria implements IEntity {
     private int codigoCliente;
     private double saldo;
     private double cantidadRetiros;
+    private RepositoryCuenta repositoryCuenta;
 
-    public CuentaBancaria() {
+    public CuentaBancaria(RepositoryCuenta repositoryCuenta) {
+        this.repositoryCuenta = repositoryCuenta;
     }
+
+    public CuentaBancaria(int codigoCliente, double saldo, double cantidadRetiros, RepositoryCuenta repositoryCuenta) {
+        this.codigoCliente = codigoCliente;
+        this.saldo = saldo;
+        this.cantidadRetiros = cantidadRetiros;
+        this.repositoryCuenta = repositoryCuenta;
+    }
+    
 
     public CuentaBancaria(double saldo, double cantidadRetiros) {
         this.saldo = saldo;
         this.cantidadRetiros = cantidadRetiros;
     }
 
-    public abstract String Crear();
+    public abstract CuentaBancariaResponse Crear();
 
-    public abstract String Consignar(double valor, String ciudad, Date fecha);
+    public abstract CuentaBancariaResponse Consignar(double valor, String ciudad, Date fecha);
 
-    public abstract String Retirar(double valor, String ciudad, Date fecha);
+    public abstract CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha);
 
-    public abstract String Consultar();
+    public abstract CuentaBancariaResponse Consultar();
 
-    public abstract int getCodigo() ;
+    public abstract int getCodigo();
 
     /**
      * @return the saldo
@@ -69,5 +81,20 @@ public abstract class CuentaBancaria implements IEntity {
     public void setCodigoCliente(int codigoCliente) {
         this.codigoCliente = codigoCliente;
     }
+
+    /**
+     * @return the repositoryCuenta
+     */
+    public RepositoryCuenta getRepositoryCuenta() {
+        return repositoryCuenta;
+    }
+
+    /**
+     * @param repositoryCuenta the repositoryCuenta to set
+     */
+    public void setRepositoryCuenta(RepositoryCuenta repositoryCuenta) {
+        this.repositoryCuenta = repositoryCuenta;
+    }
+
 
 }

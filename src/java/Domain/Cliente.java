@@ -5,24 +5,46 @@
  */
 package Domain;
 
+import Repository.RepositoryCliente;
 import java.util.ArrayList;
 
 /**
  *
  * @author geile
  */
-public class Cliente implements IEntity{
+public class Cliente {
+
     private int codigo;
     private String nombre;
-    private ArrayList<CuentaBancaria> lista;
+    RepositoryCliente repositoryCliente;
 
-    public Cliente() {
+    public Cliente(RepositoryCliente repositoryCliente) {
+        this.repositoryCliente = repositoryCliente;
     }
 
-    public Cliente(int codigo, String nombre) {
+    public Cliente(int codigo, String nombre, RepositoryCliente repositoryCliente) {
         this.codigo = codigo;
         this.nombre = nombre;
-        lista= new ArrayList<>();
+        this.repositoryCliente = repositoryCliente;
+    }
+
+    public ClienteResponse Registrar() {
+        if (repositoryCliente.Add(this)) {
+            return new ClienteResponse("Cliente registrado Correctamente", true);
+        }
+        return new ClienteResponse("Ha ocurrido un error al registrar", false);
+    }
+
+    public Cliente Consultar(int codigo) {
+        return repositoryCliente.Find(codigo);
+    }
+
+    public boolean Eliminar() {
+        return repositoryCliente.Delete(this);
+    }
+
+    public ArrayList<Cliente> ObtenerTodos() {
+        return repositoryCliente.GetAll();
     }
 
     /**
@@ -53,19 +75,4 @@ public class Cliente implements IEntity{
         this.nombre = nombre;
     }
 
-    /**
-     * @return the lista
-     */
-    public ArrayList<CuentaBancaria> getLista() {
-        return lista;
-    }
-
-    /**
-     * @param lista the lista to set
-     */
-    public void setLista(ArrayList<CuentaBancaria> lista) {
-        this.lista = lista;
-    }
-    
-    
 }

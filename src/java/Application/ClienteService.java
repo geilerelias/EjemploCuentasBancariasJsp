@@ -6,6 +6,7 @@
 package Application;
 
 import Domain.Cliente;
+import Domain.ClienteResponse;
 import Repository.RepositoryCliente;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -124,68 +125,17 @@ public class ClienteService extends HttpServlet {
             String nombre = request.getParameter("Nombre");
 
             Gson gson = new Gson();
-            ClienteResponse respuesta = new ClienteResponse();
+            ClienteResponse respuesta;
             Cliente cliente = repositoryCliente.Find(codigo);
             if (cliente == null) {
-                cliente = new Cliente(codigo, nombre);
-                if (repositoryCliente.Add(cliente)) {
-                    respuesta.setMensaje("Registro correcto");
-                    respuesta.setEstado(true);
-                } else {
-                    respuesta.setMensaje("Error en el registro");
-                    respuesta.setEstado(false);
-                }
-
+                cliente = new Cliente(codigo, nombre, repositoryCliente);
+                respuesta = cliente.Registrar();
             } else {
-                respuesta.setMensaje("El cliente ya se encuentra registrado");
-                respuesta.setEstado(false);
+                respuesta = new ClienteResponse("El cliente ya se encuentra registrado", false);
             }
 
             out.println(gson.toJson(respuesta));
         }
-    }
-
-}
-
-class ClienteResponse {
-
-    private String mensaje;
-    private boolean estado;
-
-    public ClienteResponse() {
-    }
-
-    public ClienteResponse(String mensaje, boolean estado) {
-        this.mensaje = mensaje;
-        this.estado = estado;
-    }
-
-    /**
-     * @return the mensaje
-     */
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    /**
-     * @param mensaje the mensaje to set
-     */
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
-    }
-
-    /**
-     * @return the estado
-     */
-    public boolean getEstado() {
-        return estado;
-    }
-
-    /**
-     * @param b the estado to set
-     */
-    public void setEstado(boolean b) {
-        this.estado = b;
     }
 
 }

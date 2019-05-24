@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author geile
  */
-public class RepositoryCliente {
+public class RepositoryCliente{
 
     ArrayList<Cliente> list;
 

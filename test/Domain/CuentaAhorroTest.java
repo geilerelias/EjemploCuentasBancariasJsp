@@ -5,6 +5,7 @@
  */
 package Domain;
 
+import Repository.RepositoryCuenta;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,9 +50,9 @@ public class CuentaAhorroTest {
         double valor = 0.0;
         String ciudad = "";
         Date fecha = null;
-        CuentaAhorro instance = new CuentaAhorro();
+        CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         String expResult = "";
-        String result = instance.Consignar(valor, ciudad, fecha);
+        CuentaBancariaResponse result = instance.Consignar(valor, ciudad, fecha);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -66,9 +67,9 @@ public class CuentaAhorroTest {
         double valor = 0.0;
         String ciudad = "";
         Date fecha = null;
-        CuentaAhorro instance = new CuentaAhorro();
+        CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         String expResult = "";
-        String result = instance.Retirar(valor, ciudad, fecha);
+        CuentaBancariaResponse result = instance.Retirar(valor, ciudad, fecha);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -80,7 +81,7 @@ public class CuentaAhorroTest {
     @Test
     public void testCrearSinSaldoInicial() {
         System.out.println("Crear");
-        CuentaAhorro instance = new CuentaAhorro();
+        CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         instance.setNumeroTarjeta(123455);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         String dateInString = "7-Jun-2013";
@@ -95,10 +96,10 @@ public class CuentaAhorroTest {
             e.printStackTrace();
         }
         instance.setFechaVencimiento(date);
-        instance.setSaldoMaximo(1000000);
+        
         
         String expResult = "El saldo incial debe ser mayor a cero";
-        String result = instance.Crear();
+        CuentaBancariaResponse result = instance.Crear();
         assertEquals(expResult, result);
     }
     
@@ -108,7 +109,7 @@ public class CuentaAhorroTest {
     @Test
     public void testCrear() {
         System.out.println("Crear");
-        CuentaAhorro instance = new CuentaAhorro();
+        CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         instance.setNumeroTarjeta(123455);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         String dateInString = "7-Jun-2013";
@@ -123,11 +124,10 @@ public class CuentaAhorroTest {
             e.printStackTrace();
         }
         instance.setFechaVencimiento(date);
-        instance.setSaldoMaximo(1000000);
         instance.setSaldo(100000);
         
         String expResult = "Registro Exitoso";
-        String result = instance.Crear();
+        CuentaBancariaResponse result = instance.Crear();
         assertEquals(expResult, result);
     }
 
@@ -137,9 +137,10 @@ public class CuentaAhorroTest {
     @Test
     public void testConsultar() {
         System.out.println("Consultar");
-        CuentaAhorro instance = new CuentaAhorro();
+        CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         String expResult = "";
-        String result = instance.Consultar();
+        CuentaBancariaResponse result = instance.Consultar();
+        
         assertEquals(expResult, result);
     }
 
