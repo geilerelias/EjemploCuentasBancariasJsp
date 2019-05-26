@@ -24,10 +24,9 @@ public abstract class CuentaBancaria implements IEntity {
         this.repositoryCuenta = repositoryCuenta;
     }
 
-    public CuentaBancaria(int codigoCliente, double saldo, double cantidadRetiros, RepositoryCuenta repositoryCuenta) {
+    public CuentaBancaria(int codigoCliente, double saldo, RepositoryCuenta repositoryCuenta) {
         this.codigoCliente = codigoCliente;
         this.saldo = saldo;
-        this.cantidadRetiros = cantidadRetiros;
         this.repositoryCuenta = repositoryCuenta;
     }
 

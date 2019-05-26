@@ -14,8 +14,8 @@
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     </head>
 
-    <body>
-        <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay" >
+    <body >
+        <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
             <header class="bmd-layout-header" id="header">
                 <div class="row flex-nowrap justify-content-between align-items-center" style="background-color:#70b620 ">
 
@@ -112,7 +112,7 @@
             </div>
             <!------------------- FIN CABECERA----------------------------------->
             <!------CONTENIDO--------------->
-            <div class=" container-fluid py-5 ">
+            <div class=" container-fluid py-5" style="f">
                 <div class="row justify-content-center ">
                     <div class="card ">
                         <div class="card-header text-center ">

@@ -16,7 +16,7 @@ public class Cliente {
 
     private int codigo;
     private String nombre;
-    RepositoryCliente repositoryCliente;
+    private RepositoryCliente repositoryCliente;
 
     public Cliente(RepositoryCliente repositoryCliente) {
         this.repositoryCliente = repositoryCliente;
@@ -29,22 +29,22 @@ public class Cliente {
     }
 
     public ClienteResponse Registrar() {
-        if (repositoryCliente.Add(this)) {
+        if (getRepositoryCliente().Add(this)) {
             return new ClienteResponse("Cliente registrado Correctamente", true);
         }
         return new ClienteResponse("Ha ocurrido un error al registrar", false);
     }
 
     public Cliente Consultar(int codigo) {
-        return repositoryCliente.Find(codigo);
+        return getRepositoryCliente().Find(codigo);
     }
 
     public boolean Eliminar() {
-        return repositoryCliente.Delete(this);
+        return getRepositoryCliente().Delete(this);
     }
 
     public ArrayList<Cliente> ObtenerTodos() {
-        return repositoryCliente.GetAll();
+        return getRepositoryCliente().GetAll();
     }
 
     /**
@@ -74,5 +74,21 @@ public class Cliente {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    /**
+     * @return the repositoryCliente
+     */
+    public RepositoryCliente getRepositoryCliente() {
+        return repositoryCliente;
+    }
+
+    /**
+     * @param repositoryCliente the repositoryCliente to set
+     */
+    public void setRepositoryCliente(RepositoryCliente repositoryCliente) {
+        this.repositoryCliente = repositoryCliente;
+    }
+
+
 
 }

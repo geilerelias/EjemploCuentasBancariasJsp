@@ -22,8 +22,8 @@ public class CuentaAhorro extends CuentaBancaria {
         super(repositoryCuenta);
     }
 
-    public CuentaAhorro(int numeroTarjeta, Date fechaVencimiento, int codigoCliente, double saldo, double cantidadRetiros, RepositoryCuenta repositoryCuenta) {
-        super(codigoCliente, saldo, cantidadRetiros, repositoryCuenta);
+    public CuentaAhorro(int numeroTarjeta, Date fechaVencimiento, int codigoCliente, double saldo, RepositoryCuenta repositoryCuenta) {
+        super(codigoCliente, saldo, repositoryCuenta);
         this.numeroTarjeta = numeroTarjeta;
         this.fechaVencimiento = fechaVencimiento;
     }
@@ -73,13 +73,12 @@ public class CuentaAhorro extends CuentaBancaria {
         if (this.getSaldo() <= 0) {
             return new CuentaBancariaResponse("El saldo incial debe ser mayor a cero", false);
         }
-
-        if (this.getFechaVencimiento().before(new Date())) {
+        if (this.getFechaVencimiento().compareTo(new Date())<0) {
             return new CuentaBancariaResponse("la fecha de vencimiento no es valida", false);
         }
 
         if (getRepositoryCuenta().Add(this)) {
-            return new CuentaBancariaResponse("Registro realizado con exito", true);
+            return new CuentaBancariaResponse("Registro de la tarjeta "+getNumeroTarjeta()+" con exito", true);
         }
         return new CuentaBancariaResponse("No registrado", false);
     }

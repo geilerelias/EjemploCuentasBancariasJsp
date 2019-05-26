@@ -21,8 +21,8 @@ public class CuentaCorriente extends CuentaBancaria {
         super(repositoryCuenta);
     }
 
-    public CuentaCorriente(int numeroChequera, double valorMinimo, int codigoCliente, double saldo, double cantidadRetiros, RepositoryCuenta repositoryCuenta) {
-        super(codigoCliente, saldo, cantidadRetiros, repositoryCuenta);
+    public CuentaCorriente(int numeroChequera, double valorMinimo, int codigoCliente, double saldo,  RepositoryCuenta repositoryCuenta) {
+        super(codigoCliente, saldo, repositoryCuenta);
         this.numeroChequera = numeroChequera;
         this.valorMinimo = valorMinimo;
     }

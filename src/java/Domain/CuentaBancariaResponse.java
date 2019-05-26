@@ -9,7 +9,7 @@ package Domain;
  *
  * @author geile
  */
-class CuentaBancariaResponse {
+public class CuentaBancariaResponse {
 
     private String mensaje;
     private boolean estado;
