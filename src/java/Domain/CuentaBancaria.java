@@ -6,8 +6,6 @@
 package Domain;
 
 import Repository.RepositoryCuenta;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  *
@@ -37,11 +35,13 @@ public abstract class CuentaBancaria implements IEntity {
 
     public abstract CuentaBancariaResponse Crear();
 
-    public abstract CuentaBancariaResponse Consignar(double valor, String ciudad, Date fecha);
+    public abstract CuentaBancariaResponse Consignar(double valor);
 
-    public abstract CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha);
+    public abstract CuentaBancariaResponse Retirar(double valor);
 
     public abstract CuentaBancariaResponse Consultar();
+
+    public abstract boolean ValidarCliente(int codigoCliente);
 
     public abstract int getIndex();
 
@@ -71,7 +71,7 @@ public abstract class CuentaBancaria implements IEntity {
     public void setCantidadRetiros(double cantidadRetiros) {
         this.cantidadRetiros = cantidadRetiros;
     }
-    
+
     /**
      * @return the codigoCliente
      */

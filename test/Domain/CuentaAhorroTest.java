@@ -52,7 +52,7 @@ public class CuentaAhorroTest {
         Date fecha = null;
         CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         String expResult = "";
-        CuentaBancariaResponse result = instance.Consignar(valor, ciudad, fecha);
+        CuentaBancariaResponse result = instance.Consignar(valor);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -69,7 +69,7 @@ public class CuentaAhorroTest {
         Date fecha = null;
         CuentaAhorro instance = new CuentaAhorro(new RepositoryCuenta());
         String expResult = "";
-        CuentaBancariaResponse result = instance.Retirar(valor, ciudad, fecha);
+        CuentaBancariaResponse result = instance.Retirar(valor);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

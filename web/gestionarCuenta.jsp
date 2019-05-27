@@ -132,7 +132,12 @@
                             <div class="card-body ">
                                 <ul class="nav nav-tabs bg-primary" id="myTab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="resgistrar-cuenta-ahorro-tab" data-toggle="tab" href="#resgistrar-cuenta-ahorro" role="tab" aria-controls="resgistrar-cuenta-ahorro" aria-selected="true">
+                                        <a class="nav-link active" id="listado-cuentas-tab" data-toggle="tab" href="#listado-cuentas" role="tab" aria-controls="listado-cuentas" aria-selected="true">
+                                        Cuentas
+                                    </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link " id="resgistrar-cuenta-ahorro-tab" data-toggle="tab" href="#resgistrar-cuenta-ahorro" role="tab" aria-controls="resgistrar-cuenta-ahorro" aria-selected="true">
                                         resgistrar cuenta ahorro
                                     </a>
                                     </li>
@@ -154,7 +159,23 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="resgistrar-cuenta-ahorro" role="tabpanel" aria-labelledby="resgistrar-cuenta-ahorro-tab">
+                                    <div class="tab-pane fade show active" id="listado-cuentas" role="tabpanel" aria-labelledby="listado-cuentas-tab">
+                                        <table class="table">
+                                            <thead class="thead">
+                                                <tr>
+                                                    <th>Tarjeta</th>
+                                                    <th>Saldo</th>
+                                                    <th>Saldo Maximo</th>
+                                                    <th>Saldo Minimo</th>
+                                                    <th>Fecha Vencimiento</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyCuentas">
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="tab-pane fade " id="resgistrar-cuenta-ahorro" role="tabpanel" aria-labelledby="resgistrar-cuenta-ahorro-tab">
                                         <form>
                                             <div class="form-group ">
                                                 <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
@@ -179,12 +200,29 @@
                                         </form>
                                     </div>
                                     <div class="tab-pane fade " id="registrar-cuenta-corriente" role="tabpanel" aria-labelledby="registrar-cuenta-corriente-tab">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Title</h5>
-                                                <p class="card-text">Content</p>
+                                        <form>
+                                            <div class="form-group ">
+                                                <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                                                <label for="txtNumeroTarjeta" class="bmd-label-floating ">Numero
+                                                Tarjeta</label>
+                                                <input type="number" class="form-control " id="txtNumeroTarjeta">
                                             </div>
-                                        </div>
+                                            <div class="form-group ">
+                                                <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                                                <label for="txtSaldo" class="bmd-label-floating ">Saldo</label>
+                                                <input type="number" class="form-control " id="txtSaldo">
+                                            </div>
+                                            <div class="form-group ">
+                                                <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                                                <label for="txtNombre" class="bmd-label-floating ">Fecha
+                                                Vencimiento</label>
+                                                <input type="date" class="form-control" id="txtFechaVencimiento">
+                                            </div>
+
+                                            <div class="text-center ">
+                                                <button type="button" id="btnGuardarCuentaAhorro" class="btn btn-primary btn-raised ">Guardar</button>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div class="tab-pane fade " id="consignar-cuenta" role="tabpanel" aria-labelledby="consignar-tab">
 
@@ -201,201 +239,137 @@
                                                     <label for="txtSaldoConsignar" class="bmd-label-floating ">Saldo</label>
                                                     <input type="number" class="form-control " id="txtSaldoConsignar">
                                                 </div>
-                                                <div class="form-group row">
-                                                    <div class="offset-sm-2 col-sm-10">
-                                                        <button type="button" id="btnConsignar" class="btn btn-primary btn-raised">Action</button>
+                                                <div class="form-group justify-content-center">
+                                                    <div class="text-center">
+                                                        <button type="button" id="btnConsignar" class="btn btn-primary btn-raised">Consignar</button>
                                                     </div>
                                                 </div>
                                             </form>
 
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade " id="retirar-cuenta" role="tabpanel" aria-labelledby="retirar-tab">retirar...</div>
-                                    <div class="tab-pane fade" id="consultar-saldo" role="tabpanel" aria-labelledby="consultar-saldo-tab">consultar saldo...</div>
+                                    <div class="tab-pane fade " id="retirar-cuenta" role="tabpanel" aria-labelledby="retirar-tab">
+                                        <div class="container">
+                                            <form>
+                                                <div class="form-group ">
+                                                    <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                                                    <label for="txtNumeroTarjetaRetirar" class="bmd-label-floating ">Cuenta</label>
+                                                    <input type="number" class="form-control" id="txtNumeroTarjetaRetirar">
+                                                </div>
+                                                <div class="form-group ">
+                                                    <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                                                    <label for="txtSaldoRetirar" class="bmd-label-floating ">Saldo</label>
+                                                    <input type="number" class="form-control " id="txtSaldoRetirar">
+                                                </div>
+                                                <div class="form-group justify-content-center">
+                                                    <div class="text-center">
+                                                        <button type="button" id="btnRetirar" class="btn btn-primary btn-raised">Retirar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="consultar-saldo" role="tabpanel" aria-labelledby="consultar-saldo-tab">
+                                        <div class="container">
+                                            <form class="form-inline">
+                                                <div class="form-group ">
+                                                    <!-- left unspecified, .bmd-form-group will be automatically added (inspect the code) -->
+                                                    <label for="txtNumeroTarjetaConsultar" class="bmd-label-floating ">Cuenta</label>
+                                                    <input type="number" class="form-control" id="txtNumeroTarjetaConsultar">
+                                                </div>
+                                                <button type="button" id="btnConsultar" class="ml-5 btn btn-primary btn-raised">Consultar</button>
+                                            </form>
+
+                                            <div class="form-group " id="contenedorSaldoConsultar">
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                 </div>
+            </div>
 
-
-                <footer class="footer ">
-                    <div class="container-fluid py-3 " style="background-color:#70b620; ">
-                        <div class="row ">
-                            <div class="col-4 text-white text-center ">
-                                <h6>Contacto</h6>
-                                <p>Tel. 310 6947004</p>
-                            </div>
-                            <div class="col-4 text-white text-center ">
-                                <h6>Direccion</h6>
-                                <p>Calle 31 # 27-28 Valledupar</p>
-                            </div>
-                            <div class="col-4 text-white text-center ">
-                                <h6>Más Información</h6>
-                                <a href=" " class="text-white ">Universidad Popular del Cesar</a>
-                            </div>
+            <footer class="footer ">
+                <div class="container-fluid py-3 " style="background-color:#70b620; ">
+                    <div class="row ">
+                        <div class="col-4 text-white text-center ">
+                            <h6>Contacto</h6>
+                            <p>Tel. 310 6947004</p>
+                        </div>
+                        <div class="col-4 text-white text-center ">
+                            <h6>Direccion</h6>
+                            <p>Calle 31 # 27-28 Valledupar</p>
+                        </div>
+                        <div class="col-4 text-white text-center ">
+                            <h6>Más Información</h6>
+                            <a href=" " class="text-white ">Universidad Popular del Cesar</a>
                         </div>
                     </div>
-                    <div class="justify-content-center " style="background-color: #299926 ">
-                        <div class="text-center py-1 text-white ">
-                            ©
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script>
-                            Copyright
-                        </div>
+                </div>
+                <div class="justify-content-center " style="background-color: #299926 ">
+                    <div class="text-center py-1 text-white ">
+                        ©
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>
+                        Copyright
                     </div>
-                </footer>
-                <!--------------------FOOTER-------------->
+                </div>
+            </footer>
+            <!--------------------FOOTER-------------->
             </div>
 
             <script src="https://code.jquery.com/jquery-3.2.1.min.js "></script>
             <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js " integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U " crossorigin="anonymous "></script>
             <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js " integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9 " crossorigin="anonymous "></script>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8 "></script>
+            <script src="js/gestionCuenta.js "></script>
             <script>
                 $(document).ready(function() {
 
                     $('body').bootstrapMaterialDesign();
-                    $("#btnConfirmarIdentidad").click(function(e) {
-                        var Identificacion = $("#txtIdentificacion").val();
+
+                    $("#btnConfirmarIdentidad ").click(function(e) {
+                        var Identificacion = $("#txtIdentificacion ").val();
                         console.log(Identificacion);
-                        $.ajax({
-                                url: "ClienteService",
-                                type: "POST",
-                                data: {
-                                    "Accion": "Consultar",
-                                    "Identificacion": Identificacion
-                                }
-                            })
-                            .done(function(response) {
-                                console.log(response);
-                                var json;
-                                try {
-                                    json = JSON.parse(response);
-                                } catch (e) {
-
-                                }
-                                console.log(json);
-                                if (json[1].estado === true) {
-                                    $("#staticNombre").val("Nombre: " + json[0].nombre);
-                                    $("#contenedorGestion").removeClass("d-none");
-                                    $("#contenedorGestion").addClass("d-block");
-                                } else {
-                                    Swal.fire({
-                                        type: 'error',
-                                        title: 'Oops...',
-                                        text: json[1].mensaje
-                                    });
-                                    $("#staticNombre").val("");
-                                    $("#contenedorGestion").addClass("d-none");
-                                    $("#contenedorGestion").removeClass("d-block");
-                                }
-                                //$("#staticNombre").val();
-                                console.log("success ");
-                            })
-                            .fail(function() {
-                                console.log("error ");
-                            })
-                            .always(function() {
-                                console.log("complete ");
-                            });
+                        ConsultarCliente(Identificacion);
                     });
 
-                    $("#btnGuardarCuentaAhorro").click(function(e) {
-
-                        var codigoCliente = $("#txtIdentificacion").val();
-                        var saldo = $("#txtSaldo").val();
-                        var numeroTarjeta = $("#txtNumeroTarjeta").val();
-                        var fechaVencimiento = $("#txtFechaVencimiento").val();
-
-                        $.ajax({
-                                url: "ClienteService",
-                                type: "POST",
-                                data: {
-                                    "Accion": "RegistrarCuentaBancariaAhorro",
-                                    "codigoCliente": codigoCliente,
-                                    "saldo": saldo,
-                                    "numeroTarjeta": numeroTarjeta,
-                                    "fechaVencimiento": fechaVencimiento,
-                                }
-                            })
-                            .done(function(response) {
-                                var json = JSON.parse(response);
-                                console.log(json);
-                                if (json.estado === true) {
-                                    Swal.fire({
-                                        type: 'success',
-                                        title: 'God job...',
-                                        text: json.mensaje
-                                    });
-                                    $("#txtIdentificacion").val("");
-                                    $("#txtSaldo").val("");
-                                    $("#txtNumeroTarjeta").val("");
-                                    $("#txtFechaVencimiento").val("");
-                                } else {
-                                    Swal.fire({
-                                        type: 'error',
-                                        title: 'Oops...',
-                                        text: json.mensaje
-                                    });
-
-                                }
-                                //$("#staticNombre").val();
-                                console.log("success ");
-                            })
-                            .fail(function() {
-                                console.log("error ");
-                            })
-                            .always(function() {
-                                console.log("complete ");
-                            });
+                    $("#btnGuardarCuentaAhorro ").click(function(e) {
+                        var codigoCliente = $("#txtIdentificacion ").val();
+                        var saldo = $("#txtSaldo ").val();
+                        var numeroTarjeta = $("#txtNumeroTarjeta ").val();
+                        var fechaVencimiento = $("#txtFechaVencimiento ").val();
+                        GuardarCuentaAhorro(codigoCliente, saldo, numeroTarjeta, fechaVencimiento);
                     });
-                    $("#btnConsignar").click(function(e) {
-                        var codigoCliente = $("#txtIdentificacion").val();
-                        var numeroTarjeta = $("txtNumeroTarjetaConsignar").val();
-                        var valor = $("txtSaldoConsignar").val();
-                        $.ajax({
-                                url: "ClienteService",
-                                type: "POST",
-                                data: {
-                                    "Accion": "Consignar",
-                                    "codigoCliente": codigoCliente,
-                                    "codigoCuenta": numeroTarjeta,
-                                    "valor": valor
-                                }
-                            })
-                            .done(function(response) {
-                                var json = JSON.parse(response);
-                                console.log(json);
-                                if (json.estado === true) {
-                                    Swal.fire({
-                                        type: 'success',
-                                        title: 'God job...',
-                                        text: json.mensaje
-                                    });
-                                    $("#txtIdentificacion").val("");
-                                    $("#txtSaldo").val("");
-                                    $("#txtNumeroTarjeta").val("");
-                                    $("#txtFechaVencimiento").val("");
-                                } else {
-                                    Swal.fire({
-                                        type: 'error',
-                                        title: 'Oops...',
-                                        text: json.mensaje
-                                    });
 
-                                }
-                                //$("#staticNombre").val();
-                                console.log("success ");
-                            })
-                            .fail(function() {
-                                console.log("error ");
-                            })
-                            .always(function() {
-                                console.log("complete ");
-                            });
+                    $("#btnConsignar ").click(function(e) {
+                        var codigoCliente = $("#txtIdentificacion ").val();
+                        var numeroTarjeta = $("#txtNumeroTarjetaConsignar ").val();
+                        var valor = $("#txtSaldoConsignar ").val();
+                        Consignar(codigoCliente, numeroTarjeta, valor);
+
+                    });
+
+                    $("#btnRetirar ").click(function(e) {
+                        var codigoCliente = $("#txtIdentificacion ").val();
+                        var numeroTarjeta = $("#txtNumeroTarjetaRetirar ").val();
+                        var valor = $("#txtSaldoRetirar ").val();
+                        Retirar(codigoCliente, numeroTarjeta, valor);
+
+                    });
+
+                    $("#btnConsultar ").click(function(e) {
+                        var codigoCliente = $("#txtIdentificacion ").val();
+                        var numeroTarjeta = $("#txtNumeroTarjetaConsultar ").val();
+
+                        Consultar(codigoCliente, numeroTarjeta);
+
                     });
 
                 });

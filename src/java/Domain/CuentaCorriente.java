@@ -21,7 +21,7 @@ public class CuentaCorriente extends CuentaBancaria {
         super(repositoryCuenta);
     }
 
-    public CuentaCorriente(int numeroChequera, double valorMinimo, int codigoCliente, double saldo,  RepositoryCuenta repositoryCuenta) {
+    public CuentaCorriente(int numeroChequera, double valorMinimo, int codigoCliente, double saldo, RepositoryCuenta repositoryCuenta) {
         super(codigoCliente, saldo, repositoryCuenta);
         this.numeroChequera = numeroChequera;
         this.valorMinimo = valorMinimo;
@@ -39,33 +39,37 @@ public class CuentaCorriente extends CuentaBancaria {
     }
 
     @Override
-    public CuentaBancariaResponse Consignar(double valor, String ciudad, Date fecha) {
-        setSaldo(getSaldo() + valor);
-        CuentaBancaria cuenta = getRepositoryCuenta().Find(this.getNumeroChequera());
-        getRepositoryCuenta().Edit(getIndex(), cuenta);
-        return new CuentaBancariaResponse("Consignacion correcta", false);
+    public boolean ValidarCliente(int codigoCliente) {
+        return codigoCliente == getCodigoCliente();
     }
 
     @Override
-    public CuentaBancariaResponse Retirar(double valor, String ciudad, Date fecha) {
+    public CuentaBancariaResponse Consignar(double valor) {
+        setSaldo(getSaldo() + valor);
+        CuentaBancaria cuenta = getRepositoryCuenta().Find(this.getNumeroChequera());
+        getRepositoryCuenta().Edit(getIndex(), cuenta);
+        return new CuentaBancariaResponse("Consignacion correcta.<br>Su nuevo saldo es de <b>$"+getSaldo(), true);
+    }
+
+    @Override
+    public CuentaBancariaResponse Retirar(double valor) {
         if (getSaldo() == valorMinimo) {
             return new CuentaBancariaResponse("No hay Fondos sufiecientes", false);
         }
 
         if (getSaldo() - valor * 1.10 < valorMinimo) {
-            return new CuentaBancariaResponse("No hay Fondos sufiecientes", false);
+            return new CuentaBancariaResponse("No hay Fondos sufiecientes<br>Tus fondos superan el valor minimo de <b>$"+valorMinimo, false);
         }
 
-        if (getCantidadRetiros() > 4) {
+        if (getCantidadRetiros() >= 4) {
             setSaldo(getSaldo() - valor * 1.10);
             getRepositoryCuenta().Edit(getIndex(), this);
-            return new CuentaBancariaResponse("Retiro realizado con exito, con un ocsto de $" + (valor * 0.10), true);
+            return new CuentaBancariaResponse("Retiro realizado con exito, con un costo de<b> $" + (valor * 0.10)+"</b><br>Su nuevo saldo es de <b>$"+getSaldo() , true);
         } else {
-            setSaldo(getSaldo() - valor * 0.10);
+            setSaldo(getSaldo() - valor);
             getRepositoryCuenta().Edit(getIndex(), this);
-            double cont = getCantidadRetiros();
-            setCantidadRetiros(cont++);
-            return new CuentaBancariaResponse("Retiro realizado con exito, operacion sin consto", true);
+            setCantidadRetiros(getCantidadRetiros()+1);
+            return new CuentaBancariaResponse("Retiro realizado con exito, operacion sin consto<br>Su nuevo saldo es de <b>$"+getSaldo(), true);
         }
     }
 

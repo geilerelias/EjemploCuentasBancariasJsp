@@ -10,6 +10,7 @@ import Domain.ClienteResponse;
 import Domain.CuentaAhorro;
 import Domain.CuentaBancaria;
 import Domain.CuentaBancariaResponse;
+import Domain.CuentaCorriente;
 import Repository.RepositoryCliente;
 import Repository.RepositoryCuenta;
 import com.google.gson.Gson;
@@ -34,6 +35,7 @@ import javax.swing.JOptionPane;
 @WebServlet(name = "ClienteService", urlPatterns = {"/ClienteService"})
 public class ClienteService extends HttpServlet {
 
+    boolean banderaRegistroCliente = false;
     private RepositoryCliente repositoryCliente = new RepositoryCliente();
     private RepositoryCuenta repositoryCuenta = new RepositoryCuenta();
 
@@ -72,6 +74,10 @@ public class ClienteService extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (!banderaRegistroCliente) {
+            registrarClientes();
+            banderaRegistroCliente = true;
+        }
         String accion = request.getParameter("Accion");
         if (null != accion) {
             switch (accion) {
@@ -100,8 +106,11 @@ public class ClienteService extends HttpServlet {
                 case "Consignar":
                     Consignar(response, request);
                     break;
+                case "Retirar":
+                    Retirar(response, request);
+                    break;
                 case "ObtenerTodasCuentas":
-                    ObtenerTodasCuentas(response);
+                    ObtenerTodasCuentas(response, request);
                     break;
                 case "EditarCuenta":
                     break;
@@ -123,49 +132,23 @@ public class ClienteService extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void RegistrarCuentaBancariaAhorro(HttpServletResponse response, HttpServletRequest request) throws IOException {
+    private void Registrar(HttpServletResponse response, HttpServletRequest request) throws NumberFormatException, IOException {
         try (PrintWriter out = response.getWriter()) {
-
-            int codigoCliente = Integer.parseInt(request.getParameter("codigoCliente"));
-            double saldo = Double.parseDouble(request.getParameter("saldo"));
-            int numeroTarjeta = Integer.parseInt(request.getParameter("numeroTarjeta"));
-            String fecha = request.getParameter("fechaVencimiento");
-            Date fechaVencimiento = null;
-            try {
-                SimpleDateFormat fe = new SimpleDateFormat("yyyy-MM-dd");
-                fechaVencimiento = fe.parse(fecha);
-            } catch (ParseException e) {
-                System.out.println("No se pudo convertir" + e.getMessage());
-            }
+            int codigo = Integer.parseInt(request.getParameter("Identificacion"));
+            String nombre = request.getParameter("Nombre");
 
             Gson gson = new Gson();
-            CuentaBancariaResponse respuesta;
-            if (null != repositoryCliente.Find(codigoCliente)) {
-                CuentaBancaria cuenta = repositoryCuenta.Find(numeroTarjeta);
-                if (cuenta == null) {
-                    CuentaAhorro cuentaAhorro = new CuentaAhorro(numeroTarjeta, fechaVencimiento, codigoCliente, saldo, repositoryCuenta);
-                    respuesta = cuentaAhorro.Crear();
-                } else {
-                    respuesta = new CuentaBancariaResponse("La cuenta ya se encuentra registrada", false);
-                }
-
+            ClienteResponse respuesta;
+            Cliente cliente = repositoryCliente.Find(codigo);
+            if (cliente == null) {
+                cliente = new Cliente(codigo, nombre, repositoryCliente);
+                respuesta = cliente.Registrar();
             } else {
-                respuesta = new CuentaBancariaResponse("El cliente no se encuentra registrado", false);
+                respuesta = new ClienteResponse("El cliente ya se encuentra registrado", false);
             }
+
             out.println(gson.toJson(respuesta));
         }
-    }
-
-    private void RegistrarCuentaBancariaCorriente(HttpServletResponse response, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void ConsultarCuenta(HttpServletResponse response, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void ObtenerTodasCuentas(HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void Consultar(HttpServletResponse response, HttpServletRequest request) throws IOException {
@@ -206,23 +189,42 @@ public class ClienteService extends HttpServlet {
         }
     }
 
-    private void Registrar(HttpServletResponse response, HttpServletRequest request) throws NumberFormatException, IOException {
+    ///getion cuentas bancarias 
+    private void RegistrarCuentaBancariaAhorro(HttpServletResponse response, HttpServletRequest request) throws IOException {
         try (PrintWriter out = response.getWriter()) {
-            int codigo = Integer.parseInt(request.getParameter("Identificacion"));
-            String nombre = request.getParameter("Nombre");
 
-            Gson gson = new Gson();
-            ClienteResponse respuesta;
-            Cliente cliente = repositoryCliente.Find(codigo);
-            if (cliente == null) {
-                cliente = new Cliente(codigo, nombre, repositoryCliente);
-                respuesta = cliente.Registrar();
-            } else {
-                respuesta = new ClienteResponse("El cliente ya se encuentra registrado", false);
+            int codigoCliente = Integer.parseInt(request.getParameter("codigoCliente"));
+            double saldo = Double.parseDouble(request.getParameter("saldo"));
+            int numeroTarjeta = Integer.parseInt(request.getParameter("numeroTarjeta"));
+            String fecha = request.getParameter("fechaVencimiento");
+            Date fechaVencimiento = null;
+            try {
+                SimpleDateFormat fe = new SimpleDateFormat("yyyy-MM-dd");
+                fechaVencimiento = fe.parse(fecha);
+            } catch (ParseException e) {
+                System.out.println("No se pudo convertir" + e.getMessage());
             }
 
+            Gson gson = new Gson();
+            CuentaBancariaResponse respuesta;
+            if (null != repositoryCliente.Find(codigoCliente)) {
+                CuentaBancaria cuenta = repositoryCuenta.Find(numeroTarjeta);
+                if (cuenta == null) {
+                    CuentaAhorro cuentaAhorro = new CuentaAhorro(numeroTarjeta, fechaVencimiento, codigoCliente, saldo, repositoryCuenta);
+                    respuesta = cuentaAhorro.Crear();
+                } else {
+                    respuesta = new CuentaBancariaResponse("La cuenta ya se encuentra registrada", false);
+                }
+
+            } else {
+                respuesta = new CuentaBancariaResponse("El cliente no se encuentra registrado", false);
+            }
             out.println(gson.toJson(respuesta));
         }
+    }
+
+    private void RegistrarCuentaBancariaCorriente(HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void Consignar(HttpServletResponse response, HttpServletRequest request) throws IOException {
@@ -232,30 +234,135 @@ public class ClienteService extends HttpServlet {
             int valor = Integer.parseInt(request.getParameter("valor"));
 
             Gson gson = new Gson();
-            ClienteResponse respuesta ;
-            Cliente cliente = repositoryCliente.Find(codigoCliente);
-            CuentaBancaria cuentaBancaria = repositoryCuenta.Find(codigoCliente);
+            CuentaBancariaResponse respuesta;
 
-            if (cliente != null) {
-                if (cuentaBancaria != null) {
-
-                    if (cuentaBancaria.getClass() == CuentaAhorro.class) {
-                        respuesta = new ClienteResponse("La cuenta es de ahorro", false);
-
-                    }else{
-                        respuesta = new ClienteResponse("algo esta mal", false);
-
-                    }
-                    // respuesta = new ClienteResponse("El cliente ya se encuentra registrado", false);
+            CuentaBancaria cuentaBancaria = repositoryCuenta.Find(codigoCuenta);
+            if (cuentaBancaria != null) {
+                if (cuentaBancaria.ValidarCliente(codigoCliente)) {
+                    respuesta = cuentaBancaria.Consignar(valor);
                 } else {
-                    respuesta = new ClienteResponse("La cuenta no se encuentra registrada", false);
+                    respuesta = new CuentaBancariaResponse("El cliente no tiene esta cuenta asociado", false);
                 }
             } else {
-                respuesta = new ClienteResponse("El cliente no se encuentra registrado", false);
+                respuesta = new CuentaBancariaResponse("La cuenta no se encuentra registrada", false);
             }
 
             out.println(gson.toJson(respuesta));
         }
+    }
+
+    private void Retirar(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        try (PrintWriter out = response.getWriter()) {
+            int codigoCliente = Integer.parseInt(request.getParameter("codigoCliente"));
+            int codigoCuenta = Integer.parseInt(request.getParameter("codigoCuenta"));
+            int valor = Integer.parseInt(request.getParameter("valor"));
+
+            Gson gson = new Gson();
+            CuentaBancariaResponse respuesta;
+
+            CuentaBancaria cuentaBancaria = repositoryCuenta.Find(codigoCuenta);
+            if (cuentaBancaria != null) {
+                if (cuentaBancaria.ValidarCliente(codigoCliente)) {
+                    respuesta = cuentaBancaria.Retirar(valor);
+                    // respuesta = new ClienteResponse("El cliente ya se encuentra registrado", false);
+                } else {
+                    respuesta = new CuentaBancariaResponse("El cliente no tiene esta cuenta asociado", false);
+                }
+            } else {
+                respuesta = new CuentaBancariaResponse("La cuenta no se encuentra registrada", false);
+            }
+
+            out.println(gson.toJson(respuesta));
+        }
+    }
+
+    private void ConsultarCuenta(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        try (PrintWriter out = response.getWriter()) {
+            int codigoCliente = Integer.parseInt(request.getParameter("codigoCliente"));
+            int codigoCuenta = Integer.parseInt(request.getParameter("codigoCuenta"));
+
+            Gson gson = new Gson();
+            CuentaBancariaResponse respuesta;
+
+            CuentaBancaria cuentaBancaria = repositoryCuenta.Find(codigoCuenta);
+            if (cuentaBancaria != null) {
+                if (cuentaBancaria.ValidarCliente(codigoCliente)) {
+                    respuesta = new CuentaBancariaResponse("Saldo $" + cuentaBancaria.getSaldo(), true);
+                    // respuesta = new ClienteResponse("El cliente ya se encuentra registrado", false);
+                } else {
+                    respuesta = new CuentaBancariaResponse("El cliente no  tiene esta cuenta asociado", false);
+                }
+            } else {
+                respuesta = new CuentaBancariaResponse("La cuenta no se encuentra registrada", false);
+            }
+
+            out.println(gson.toJson(respuesta));
+        }
+    }
+
+    private void ObtenerTodasCuentas(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        String tableBody = "";
+        try (PrintWriter out = response.getWriter()) {
+            int codigoCliente = Integer.parseInt(request.getParameter("codigoCliente"));
+            /* TODO output your page here. You may use following sample code. */
+            int i = 0;
+            for (CuentaBancaria c : repositoryCuenta.GetAll()) {
+                if (c.ValidarCliente(codigoCliente)) {
+                    if (c.getClass() == CuentaAhorro.class) {
+                        CuentaAhorro ca = (CuentaAhorro) c;
+                        tableBody += "<tr>"
+                                + "<td>" + ca.getNumeroTarjeta() + "</td>"
+                                + "<td>" + ca.getSaldo() + "</td>"
+                                + "<td>" + ca.getSaldoMaximo() + "</td>"
+                                + "<td>" + "-" + "</td>"
+                                + "<td>" + new SimpleDateFormat("dd-MM-yyyy").format(ca.getFechaVencimiento()) + "</td>"
+                                + "</tr>";
+                    } else {
+                        CuentaCorriente cc = (CuentaCorriente) c;
+                        tableBody += "<tr>"
+                                + "<td>" + cc.getNumeroChequera() + "</td>"
+                                + "<td>" + cc.getSaldo() + "</td>"
+                                + "<td>" + "-" + "</td>"
+                                + "<td>" + cc.getValorMinimo() + "</td>"
+                                + "<td>" + "-" + "</td>"
+                                + "</tr>";
+                    }
+
+                }
+
+            }
+            out.println(tableBody);
+        }
+    }
+
+    private void registrarClientes() {
+        repositoryCliente.Add(new Cliente(111, "elias", repositoryCliente));
+        repositoryCliente.Add(new Cliente(112, "jose", repositoryCliente));
+        repositoryCliente.Add(new Cliente(113, "juan", repositoryCliente));
+        repositoryCliente.Add(new Cliente(114, "pedro", repositoryCliente));
+
+        registrarCUentas();
+    }
+
+    private void registrarCUentas() {
+        String fecha = "2020-03-04";
+        Date fechaVencimineto = null;
+        try {
+            SimpleDateFormat fe = new SimpleDateFormat("yyyy-MM-dd");
+            fechaVencimineto = fe.parse(fecha);
+        } catch (ParseException e) {
+            System.out.println("No se pudo convertir" + e.getMessage());
+        }
+        repositoryCuenta.Add(new CuentaAhorro(1010, fechaVencimineto, 111, 50000, repositoryCuenta));
+        repositoryCuenta.Add(new CuentaAhorro(1012, fechaVencimineto, 111, 150000, repositoryCuenta));
+        repositoryCuenta.Add(new CuentaCorriente(3030, 10000, 111, 30000, repositoryCuenta));
+
+        repositoryCuenta.Add(new CuentaAhorro(1013, fechaVencimineto, 112, 1750000, repositoryCuenta));
+        repositoryCuenta.Add(new CuentaCorriente(3031, 10000, 112, 80000, repositoryCuenta));
+
+        repositoryCuenta.Add(new CuentaAhorro(1014, fechaVencimineto, 113, 500000, repositoryCuenta));
+        repositoryCuenta.Add(new CuentaCorriente(3032, 10000, 113, 30000, repositoryCuenta));
+
     }
 
 }
