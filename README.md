@@ -1,4 +1,4 @@
-# ParcialMovilFacturacion<br>
+# EjemploCuentasBancariasJsp<br>
 este es un ejemplo de la creacion de cuentas bancarias en jsp <br>
 <b> Estas son las reglas del negocio</b>
 <br>
